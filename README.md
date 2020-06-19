@@ -27,3 +27,5 @@
     - Run command `npm init`
 - Install project's dependences
 	- Run comman `npm install <option> <module-name>`
+## Film API example
+- Request all films with the title has a word **"little"**: `http://www.omdbapi.com/?s=little&apikey=cf187c8b`
