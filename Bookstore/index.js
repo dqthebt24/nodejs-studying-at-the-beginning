@@ -1,8 +1,18 @@
 let express = require('express');
 let app = express();
 
-app.get('/', (req, res) => {
-    return res.send('Hello World');
+const dbBooks = require('./books.json');
+
+app.get('/books', (req, res) => {
+    return res.send(dbBooks);
+})
+
+app.get('/books', (req, res) => {
+    return res.send('You want to get all books');
+})
+
+app.get('/books/:title', (req, res) => {
+    return res.send(req.params);
 })
 
 app.listen(8000, () => {
