@@ -11,11 +11,11 @@ const dbBooks = require('./books.json');
 
 // UTILITIES
 function findBooksByTitile(title) {
-    return dbBooks.filter(it => it.title === title)
+    return dbBooks.filter(it => it.title === title);
 }
 
 function addBook(book) {
-    dbBooks.push(book)
+    dbBooks.push(book);
 }
 
 function isBookAlready(title){
@@ -24,12 +24,10 @@ function isBookAlready(title){
 
 // GET
 app.get('/books', (req, res) => {
+    res.status(200);
     return res.send(dbBooks);
 })
 
-app.get('/books', (req, res) => {
-    return res.send('You want to get all books');
-})
 
 
 app.get('/books/:title', (req, res) => {
@@ -49,8 +47,7 @@ app.get('/books/:title', (req, res) => {
 // POST
 app.post('/books', (req, res) => {
     if (!req.body.title || req.body.title.trim().length < 1) {
-        res.status = 400;
-        return res.send({
+        return res.status(400).send({
             message: "Missing or invalid title!"
         })
     }

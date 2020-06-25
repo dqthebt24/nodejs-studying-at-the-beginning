@@ -96,3 +96,7 @@ app.post('/books', (req, res) => {
 })
 ```
 - Add logic check if the book is already
+
+### Tips
+1. Use ***nodemon*** to save the time
+    > `npm install -g nodemon`
