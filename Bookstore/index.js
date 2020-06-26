@@ -7,7 +7,7 @@ app.use(bodyParser.json({
     type:'application/json'
 }))
 
-const dbBooks = require('./books.json');
+let dbBooks = require('./books.json');
 
 // UTILITIES
 function findBooksByTitile(title) {
@@ -24,6 +24,10 @@ function isBookAlready(title){
 
 function updateBook(book, newInfo) {
     Object.assign(book, newInfo);
+}
+
+function deleteBook(book) {
+    dbBooks = dbBooks.filter(it => it !== book)
 }
 
 // GET
@@ -81,6 +85,29 @@ app.put('/books/:title', (req, res) => {
     // Return could not find the book
     return res.status(404).send({
         message: `Couldn't find the book!`
+    })
+})
+
+// DELETE
+app.delete('/books/:title', (req, res) => {
+    if (!req.params.title || req.params.title.trim().length < 1) {
+        return res.status(400).send({
+            message: "Missing or invalid title!"
+        })
+    }
+
+    let books = findBooksByTitile(req.params.title)
+    if (books.length < 1) {
+        res.status = 404;
+        return res.send({
+            message: 'Not found the book!'
+        });
+    }
+
+    deleteBook(books.pop());
+
+    return res.status(200).send({
+        message: 'The book is deleted successfully!'
     })
 })
 
