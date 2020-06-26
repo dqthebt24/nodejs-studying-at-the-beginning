@@ -22,6 +22,10 @@ function isBookAlready(title){
     return dbBooks.find(title)
 }
 
+function updateBook(book, newInfo) {
+    Object.assign(book, newInfo);
+}
+
 // GET
 app.get('/books', (req, res) => {
     res.status(200);
@@ -55,6 +59,28 @@ app.post('/books', (req, res) => {
     addBook(req.body);
     return res.send({
         message: 'The book is added successfully!'
+    })
+})
+
+// PUT
+// Update a book title
+app.put('/books/:title', (req, res) => {
+
+    // If can find the title
+    let books = findBooksByTitile(req.params.title);
+
+    if (books.length >= 1) {
+
+        updateBook(books[0], req.body);
+
+        return res.status(200).send({
+            message: 'The book is updated successfully!'
+        })
+    }
+
+    // Return could not find the book
+    return res.status(404).send({
+        message: `Couldn't find the book!`
     })
 })
 
