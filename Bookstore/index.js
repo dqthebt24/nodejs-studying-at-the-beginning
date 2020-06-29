@@ -31,6 +31,11 @@ function deleteBook(book) {
 }
 
 // GET
+// Re-direction
+app.get('/', (req, res) => {
+    return res.redirect('/books');
+})
+
 app.get('/books', (req, res) => {
     res.status(200);
     return res.send(dbBooks);
@@ -59,9 +64,15 @@ app.post('/books', (req, res) => {
             message: "Missing or invalid title!"
         })
     }
-    console.log('Length: ')
+    
+    if (isBookAlready(title)){
+        return res.status(400).send({
+            message: "The book is already in the bookstore!"
+        })
+    }
+
     addBook(req.body);
-    return res.send({
+    return res.status(200).send({
         message: 'The book is added successfully!'
     })
 })

@@ -10,9 +10,26 @@
 	- API create new book (HTTP action POST)
 	- API delete a book (HTTP action DELETE)
 
-## Main functions
+## Init DB
+- Read books from a `json` file
+```js
+let dbBooks = require('./books.json');
+```
+- Re-direction URL `/` to `/books`
+```js
+app.get('/', (req, res) => {
+    return res.redirect('/books');
+})
+```
 
 ### Get all books
+- Create a API to get all books
+```js
+app.get('/books', (req, res) => {
+    res.status(200);
+    return res.send(dbBooks);
+})
+```
 
 ### Get books by title
 - Create a utility function to get a book by title
@@ -45,7 +62,7 @@ app.get('/books/:title', (req, res) => {
 ```
 
 ### Post books
-- Add package get request body ""
+- Add package get request body <a name="add-body-parser">
 ```js
 let bodyParser = require('body-parser')
 ...
@@ -96,6 +113,55 @@ app.post('/books', (req, res) => {
 })
 ```
 - Add logic check if the book is already
+```js
+function isBookAlready(title){
+    return dbBooks.find(title)
+}
+...
+app.post('/books', (req, res) => {
+	...
+	if (isBookAlready(title)){
+        return res.status(400).send({
+            message: "The book is already in the bookstore!"
+        })
+    }
+	...
+}
+```
+
+### Delete a book
+- Create new utility function for deleting a book from DB
+```js
+function deleteBook(book) {
+    dbBooks = dbBooks.filter(it => it !== book)
+}
+```
+- Add an API delete a book by title
+```js
+app.delete('/books/:title', (req, res) => {
+	if (!req.params.title || req.params.title.trim().length < 1) {
+        return res.status(400).send({
+            message: "Missing or invalid title!"
+        })
+    }
+
+    let books = findBooksByTitile(req.params.title)
+    if (books.length < 1) {
+        return res.status(404).send({
+            message: 'Not found the book!'
+        });
+    }
+
+    deleteBook(books.pop());
+
+    return res.status(200).send({
+        message: 'The book is deleted successfully!'
+    })
+}
+```
+
+### Edit book's info
+- If didn't add `body-parser`, view [get request body](#add-body-parser)
 
 ### Tips
 1. Use ***nodemon*** to save the time
